@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2016 Rockchip Electronics Co.Ltd
  * Authors:
- *	Zhiqin Wei <wzq@rock-chips.com>
+ *    Zhiqin Wei <wzq@rock-chips.com>
  *
  * This program is free software; you can redistribute  it and/or modify it
  * under  the terms of  the GNU General  Public License as published by the
@@ -123,7 +123,7 @@ int RockchipRga::RkRgaLogOutUserPara(rga_info *rgaInfo)
         return -EINVAL;
 
     ALOGD("fd-vir-phy-hnd-format[%d, %p, %p, %p, %d]", rgaInfo->fd,
-	rgaInfo->virAddr, rgaInfo->phyAddr, (void*)rgaInfo->hnd, rgaInfo->format);
+    rgaInfo->virAddr, rgaInfo->phyAddr, (void*)rgaInfo->hnd, rgaInfo->format);
     ALOGD("rect[%d, %d, %d, %d, %d, %d, %d, %d]",
         rgaInfo->rect.xoffset, rgaInfo->rect.yoffset,
         rgaInfo->rect.width,   rgaInfo->rect.height, rgaInfo->rect.wstride,

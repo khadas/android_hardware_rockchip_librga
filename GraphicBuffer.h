@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2016 Rockchip Electronics Co.Ltd
  * Authors:
- *	Zhiqin Wei <wzq@rock-chips.com>
+ *    Zhiqin Wei <wzq@rock-chips.com>
  *
  * This program is free software; you can redistribute  it and/or modify it
  * under  the terms of  the GNU General  Public License as published by the
@@ -55,9 +55,9 @@
 // -------------------------------------------------------------------------------
 int         RkRgaGetHandleFd(buffer_handle_t handle, int *fd);
 int         RkRgaGetHandleAttributes(buffer_handle_t handle,
-							std::vector<int> *attrs);
+                            std::vector<int> *attrs);
 int         RkRgaGetHandleMapAddress(buffer_handle_t handle,
-									void **buf);
+                                    void **buf);
 
 int         RkRgaGetRgaFormat(int format);
 #endif

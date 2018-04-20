@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2016 Rockchip Electronics Co.Ltd
  * Authors:
- *	Zhiqin Wei <wzq@rock-chips.com>
+ *    Zhiqin Wei <wzq@rock-chips.com>
  *
  * This program is free software; you can redistribute  it and/or modify it
  * under  the terms of  the GNU General  Public License as published by the
@@ -96,13 +96,13 @@ int main()
     dstWidth = 1280;
     dstHeight = 720;
     dstFormat = HAL_PIXEL_FORMAT_RGBA_8888;
-	
+
     /******************************
      * Instantiation RockchipRga:
      * Singleton pattern instantiates an interface,you can use it to call RGA_interface
      ******************************/
     RockchipRga& rkRga(RockchipRga::get());
-	
+
     /******************************
      * Instantiation GraphicBufferMapper:
      * Instantiation Android's tool of GraphicBufferMapper,
@@ -126,8 +126,8 @@ int main()
         return ret;
     }else{
         printf("GraphicBuffer_src %s \n","ok");
-	}
-        
+    }
+
     /******************************
      * Apply For Dst_buffer:
      ******************************/
@@ -169,7 +169,7 @@ int main()
     if (ret) {
         printf("lock buffer_src error : %s\n",strerror(errno));
         return ret;
-    } else 
+    } else
         printf("lock buffer_src %s \n","ok");
 
     /******************************
@@ -185,7 +185,7 @@ int main()
     if (ret) {
         printf("unlock buffer_src error : %s\n",strerror(errno));
         return ret;
-    } else 
+    } else
         printf("unlock buffer_src %s \n","ok");
 
     /******************************
@@ -195,7 +195,7 @@ int main()
     if (ret) {
         printf("lock buffer_dst error : %s\n",strerror(errno));
         return ret;
-    } else 
+    } else
         printf("lock buffer_dst %s \n","ok");
 
     /******************************
@@ -211,7 +211,7 @@ int main()
     if (ret) {
         printf("unlock buffer_dst error : %s\n",strerror(errno));
         return ret;
-    } else 
+    } else
         printf("unlock buffer_dst %s \n","ok");
 
     while(1) {
@@ -219,24 +219,24 @@ int main()
         * Instantiation rga_info_t:
         * Packaging information about source and target buffer.
         ******************************/
-    	rga_info_t src;
-    	rga_info_t dst;
-		
-    	memset(&src, 0, sizeof(rga_info_t));
-    	src.fd = -1;
+        rga_info_t src;
+        rga_info_t dst;
+
+        memset(&src, 0, sizeof(rga_info_t));
+        src.fd = -1;
         src.mmuFlag = 1;
         src.hnd = gbs->handle;
-		
-    	memset(&dst, 0, sizeof(rga_info_t));
-    	dst.fd = -1;
-    	dst.mmuFlag = 1;
+
+        memset(&dst, 0, sizeof(rga_info_t));
+        dst.fd = -1;
+        dst.mmuFlag = 1;
         dst.hnd = gbd->handle;
-		
+
         /******************************
          * Get Src_fd:
          * Calling RkRgaGetBufferFd interface of rkRga to get fd by handle
          ******************************/
-    	ret = rkRga.RkRgaGetBufferFd(gbs->handle, &src.fd);
+        ret = rkRga.RkRgaGetBufferFd(gbs->handle, &src.fd);
         printf("src.fd =%d\n",src.fd);
         if (ret) {
             printf("rgaGetsrcFd fail : %s,hnd=%p \n",
@@ -246,8 +246,8 @@ int main()
          * Get Dst_fd:
          * Calling RkRgaGetBufferFd interface of rkRga to get fd by handle
          ******************************/
-    	ret = rkRga.RkRgaGetBufferFd(gbd->handle, &dst.fd);
-		printf("dst.fd =%d \n",dst.fd);
+        ret = rkRga.RkRgaGetBufferFd(gbd->handle, &dst.fd);
+        printf("dst.fd =%d \n",dst.fd);
         if (ret) {
             printf("rgaGetdstFd error : %s,hnd=%p\n",
                                             strerror(errno),(void*)(gbd->handle));
@@ -293,13 +293,13 @@ int main()
          ******************************/
         rga_set_rect(&src.rect, 0,0,srcWidth,srcHeight,srcWidth/*stride*/,srcHeight,srcFormat);
         rga_set_rect(&dst.rect, 0,0,dstWidth,dstHeight,dstWidth/*stride*/,dstHeight,dstFormat);
-		
+
         /******************************
          * Set The rga_mod:
          * Configure RGA work mode,here is Compositing Mode
          ******************************/
         src.blend = 0xff0105;
-		
+
         /******************************
          * Calling Rga_Interface:
          * 1.Deliver two configured data structures to Rga_Interface and Waiting RGA to finish work.
@@ -309,13 +309,13 @@ int main()
         struct timeval tpend1, tpend2;
         long usec1 = 0;
         gettimeofday(&tpend1, NULL);
-		
+
         ret = rkRga.RkRgaBlit(&src, &dst, NULL);
         if (ret) {
             printf("rgaFillColor error : %s,hnd=%p\n",
                                             strerror(errno),(void*)(gbd->handle));
         }
-		
+
         gettimeofday(&tpend2, NULL);
         usec1 = 1000 * (tpend2.tv_sec - tpend1.tv_sec) + (tpend2.tv_usec - tpend1.tv_usec) / 1000;
         printf("cost_time=%ld ms\n", usec1);
@@ -333,7 +333,7 @@ int main()
         }
         printf("threadloop\n");
         usleep(500000);
-	break;
+    break;
     }
     return 0;
 }

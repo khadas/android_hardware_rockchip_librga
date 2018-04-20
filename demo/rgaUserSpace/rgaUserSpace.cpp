@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2016 Rockchip Electronics Co.Ltd
  * Authors:
- *	Zhiqin Wei <wzq@rock-chips.com>
+ *    Zhiqin Wei <wzq@rock-chips.com>
  *
  * This program is free software; you can redistribute  it and/or modify it
  * under  the terms of  the GNU General  Public License as published by the
@@ -80,23 +80,23 @@ int main()
     int srcWidth,srcHeight,srcFormat;
     int dstWidth,dstHeight,dstFormat;
 
-	void *src = NULL;
+    void *src = NULL;
     void *dst = NULL;
 
     srcWidth = 1280;
     srcHeight = 720;
-	srcFormat = HAL_PIXEL_FORMAT_RGBA_8888;
+    srcFormat = HAL_PIXEL_FORMAT_RGBA_8888;
 
     dstWidth = 1280;
     dstHeight = 720;
-	dstFormat = HAL_PIXEL_FORMAT_RGBA_8888;
+    dstFormat = HAL_PIXEL_FORMAT_RGBA_8888;
 
-	/********** apply for buffer **********/
+    /********** apply for buffer **********/
     src = malloc(srcWidth * srcHeight * 4);
     if (!src)
         return -ENOMEM;
-    
-	/********** apply for buffer **********/
+
+    /********** apply for buffer **********/
     dst = malloc(dstWidth * dstHeight * 4);
     if (!dst) {
         free(src);
@@ -104,47 +104,47 @@ int main()
     }
 
     RockchipRga& rkRga(RockchipRga::get());
-	
-	/********** get data to src_buffer or init buffer**********/
+
+    /********** get data to src_buffer or init buffer**********/
     char* buf = (char *)src;
     get_buf_from_file(buf, srcFormat, srcWidth, srcHeight, 1);
 
 
-	/********** get data to dst_buffer or init buffer **********/
+    /********** get data to dst_buffer or init buffer **********/
     buf = (char *)dst;
     get_buf_from_file(buf, srcFormat, srcWidth, srcHeight, 0);
 
-	
+
     while(1) {
-		/********** rga_info_t Init **********/
-    	rga_info_t rgasrc;
-    	rga_info_t rgadst;
-		
-    	memset(&rgasrc, 0, sizeof(rga_info_t));
-    	rgasrc.fd = -1;
-    	rgasrc.mmuFlag = 1;
-		rgasrc.virAddr = src;
-		
-    	memset(&rgadst, 0, sizeof(rga_info_t));
-    	rgadst.fd = -1;
-    	rgadst.mmuFlag = 1;
-		rgadst.virAddr = dst;
-		
+        /********** rga_info_t Init **********/
+        rga_info_t rgasrc;
+        rga_info_t rgadst;
+
+        memset(&rgasrc, 0, sizeof(rga_info_t));
+        rgasrc.fd = -1;
+        rgasrc.mmuFlag = 1;
+        rgasrc.virAddr = src;
+
+        memset(&rgadst, 0, sizeof(rga_info_t));
+        rgadst.fd = -1;
+        rgadst.mmuFlag = 1;
+        rgadst.virAddr = dst;
+
         /********** set the rect_info **********/
         rga_set_rect(&rgasrc.rect, 0,0,srcWidth,srcHeight,srcWidth/*stride*/,srcHeight,srcFormat);
         rga_set_rect(&rgadst.rect, 0,0,dstWidth,dstHeight,dstWidth/*stride*/,dstHeight,dstFormat);
-		
-		/************ set the rga_mod ,rotation\composition\scale\copy .... **********/
-		rgasrc.blend = 0xff0105;
-	
+
+        /************ set the rga_mod ,rotation\composition\scale\copy .... **********/
+        rgasrc.blend = 0xff0105;
+
         /********** call rga_Interface **********/
         struct timeval tpend1, tpend2;
-		long usec1 = 0;
-		gettimeofday(&tpend1, NULL);
+        long usec1 = 0;
+        gettimeofday(&tpend1, NULL);
         ret = rkRga.RkRgaBlit(&rgasrc, &rgadst, NULL);
         gettimeofday(&tpend2, NULL);
-		usec1 = 1000 * (tpend2.tv_sec - tpend1.tv_sec) + (tpend2.tv_usec - tpend1.tv_usec) / 1000;
-		printf("cost_time=%ld ms\n", usec1);
+        usec1 = 1000 * (tpend2.tv_sec - tpend1.tv_sec) + (tpend2.tv_usec - tpend1.tv_usec) / 1000;
+        printf("cost_time=%ld ms\n", usec1);
 
         if (ret) {
             printf("rgaFillColor error : %s\n",
@@ -152,13 +152,13 @@ int main()
         }
 
         {
-			/********** output buf data to file **********/
+            /********** output buf data to file **********/
             char* dstbuf = (char *)dst;
             output_buf_data_to_file(dstbuf, dstFormat, dstWidth, dstHeight, 0);
         }
         printf("threadloop\n");
         usleep(500000);
-	break;
+    break;
     }
     return 0;
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2016 Rockchip Electronics Co.Ltd
  * Authors:
- *	Zhiqin Wei <wzq@rock-chips.com>
+ *    Zhiqin Wei <wzq@rock-chips.com>
  *
  * This program is free software; you can redistribute  it and/or modify it
  * under  the terms of  the GNU General  Public License as published by the
@@ -83,15 +83,15 @@ int main()
 
     dstWidth = 1280;
     dstHeight = 720;
-	dstFormat = HAL_PIXEL_FORMAT_RGBA_8888;
-	
-	/********** instantiation RockchipRga **********/
+    dstFormat = HAL_PIXEL_FORMAT_RGBA_8888;
+
+    /********** instantiation RockchipRga **********/
     RockchipRga& rkRga(RockchipRga::get());
-	
-	/********** instantiation GraphicBufferMapper **********/
+
+    /********** instantiation GraphicBufferMapper **********/
     GraphicBufferMapper &mgbMapper = GraphicBufferMapper::get();
-        
-	/********** apply for dst_buffer **********/
+
+    /********** apply for dst_buffer **********/
 #ifdef ANDROID_7_DRM
     sp<GraphicBuffer> gbd(new GraphicBuffer(dstWidth,dstHeight,dstFormat,
         GRALLOC_USAGE_SW_WRITE_OFTEN | GRALLOC_USAGE_SW_READ_OFTEN | GRALLOC_USAGE_HW_FB));
@@ -116,21 +116,21 @@ int main()
     mgbMapper.registerBuffer(gbd->handle);
 #endif
 
-	/********** write data to src_buffer or init buffer**********/
+    /********** write data to src_buffer or init buffer**********/
     ret = gbd->lock(GRALLOC_USAGE_SW_WRITE_OFTEN, (void**)&buf);
     if (ret) {
         printf("lock buffer_dst error : %s\n",strerror(errno));
         return ret;
-    } else 
+    } else
         printf("lock buffer_dst %s \n","ok");
 
-	/********** buffer initialize **********/
-	/* Notice :
-	 *          RGBA8888 4 bytes
-	 *          YUV      1.5 bytes
-	 *          RGB565   2 bytes
-	 * so,if you want to memset YUV_buffer please 1.5*xx*xx
-	 */
+    /********** buffer initialize **********/
+    /* Notice :
+     *          RGBA8888 4 bytes
+     *          YUV      1.5 bytes
+     *          RGB565   2 bytes
+     * so,if you want to memset YUV_buffer please 1.5*xx*xx
+     */
     memset(buf,0x00,4*1280*720);
 
 
@@ -138,67 +138,67 @@ int main()
     if (ret) {
         printf("unlock buffer_dst error : %s\n",strerror(errno));
         return ret;
-    } else 
+    } else
         printf("unlock buffer_dst %s \n","ok");
 
     while(1) {
-		/********** rga_info_t Init **********/
-    	rga_info_t dst;
+        /********** rga_info_t Init **********/
+        rga_info_t dst;
 
-		
-    	memset(&dst, 0, sizeof(rga_info_t));
-    	dst.fd = -1;
-    	dst.mmuFlag = 1;
-		dst.hnd = gbd->handle;
-		
-		/********** get dst_Fd **********/
-    	ret = rkRga.RkRgaGetBufferFd(gbd->handle, &dst.fd);
-		printf("dst.fd =%d \n",dst.fd);
+
+        memset(&dst, 0, sizeof(rga_info_t));
+        dst.fd = -1;
+        dst.mmuFlag = 1;
+        dst.hnd = gbd->handle;
+
+        /********** get dst_Fd **********/
+        ret = rkRga.RkRgaGetBufferFd(gbd->handle, &dst.fd);
+        printf("dst.fd =%d \n",dst.fd);
         if (ret) {
             printf("rgaGetdstFd error : %s,hnd=%p\n",
                                             strerror(errno),(void*)(gbd->handle));
         }
-		/********** fd is valid ? **************/
+        /********** fd is valid ? **************/
 #ifndef RK3188
         if(dst.fd <= 0)
 #endif
-		{
-			/********** check phyAddr and virAddr ,if none to get virAddr **********/
-			if (( dst.phyAddr != 0 || dst.virAddr != 0 ) || dst.hnd != NULL ){
-				ret = RkRgaGetHandleMapAddress( gbd->handle, &dst.virAddr );
-				printf("dst.virAddr =%p\n",dst.virAddr);
-				if(!dst.virAddr){
-					printf("err! dst has not fd and address for render ,Stop!\n");
-					break;
-				}		
-			}
-		}
+        {
+            /********** check phyAddr and virAddr ,if none to get virAddr **********/
+            if (( dst.phyAddr != 0 || dst.virAddr != 0 ) || dst.hnd != NULL ){
+                ret = RkRgaGetHandleMapAddress( gbd->handle, &dst.virAddr );
+                printf("dst.virAddr =%p\n",dst.virAddr);
+                if(!dst.virAddr){
+                    printf("err! dst has not fd and address for render ,Stop!\n");
+                    break;
+                }
+            }
+        }
         /********** set the rect_info **********/
         rga_set_rect(&dst.rect, 0,0,dstWidth,dstHeight,dstWidth/*stride*/,dstHeight,dstFormat);
-		
-		/************ set the rga_mod  **********/
-		dst.color = 0xffff0000;
-		//dst.color = 0xff00ff00;
-		//dst.color = 0xff0000ff;
-		
-		/********** call rga_Interface **********/
+
+        /************ set the rga_mod  **********/
+        dst.color = 0xffff0000;
+        //dst.color = 0xff00ff00;
+        //dst.color = 0xff0000ff;
+
+        /********** call rga_Interface **********/
         struct timeval tpend1, tpend2;
-		long usec1 = 0;
-		gettimeofday(&tpend1, NULL);
-		
+        long usec1 = 0;
+        gettimeofday(&tpend1, NULL);
+
         ret = rkRga.RkRgaCollorFill(&dst);
-		if (ret) {
+        if (ret) {
             printf("rgaFillColor error : %s,hnd=%p\n",
                                             strerror(errno),(void*)(gbd->handle));
         }
-		
-		gettimeofday(&tpend2, NULL);
-		usec1 = 1000 * (tpend2.tv_sec - tpend1.tv_sec) + (tpend2.tv_usec - tpend1.tv_usec) / 1000;
-		printf("cost_time=%ld ms\n", usec1);
+
+        gettimeofday(&tpend2, NULL);
+        usec1 = 1000 * (tpend2.tv_sec - tpend1.tv_sec) + (tpend2.tv_usec - tpend1.tv_usec) / 1000;
+        printf("cost_time=%ld ms\n", usec1);
 
 
         {
-			/********** output buf data to file **********/
+            /********** output buf data to file **********/
             char* dstbuf = NULL;
             ret = gbd->lock(GRALLOC_USAGE_SW_WRITE_OFTEN, (void**)&dstbuf);
             //for(int i =0; i < mHeight * 1.5; i++)
@@ -208,7 +208,7 @@ int main()
         }
         printf("threadloop\n");
         usleep(500000);
-	break;
+    break;
     }
     return 0;
 }
