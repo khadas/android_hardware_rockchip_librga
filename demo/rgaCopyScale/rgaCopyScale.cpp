@@ -171,7 +171,7 @@ int main()
      *          RGB565   2 bytes
      * so,if you want to memset YUV_buffer please 1.5*xx*xx
      */
-    memset(buf,0x00,4*1920*1088);
+    //memset(buf,0x00,4*1920*1088);
 
     ret = gbd->unlock();
     if (ret) {

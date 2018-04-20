@@ -112,6 +112,7 @@ int NormalRgaOpen(void **context)
     ret = ioctl(fd, RGA_GET_VERSION, buf);
     ctx->mVersion = atof(buf);
     fprintf(stderr, "librga:RGA_GET_VERSION:%s,%f\n", buf, ctx->mVersion);
+    property_set("sys.rga.version",RGA_VERSION)
 
     NormalRgaInitTables();
 

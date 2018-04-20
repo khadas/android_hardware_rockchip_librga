@@ -53,6 +53,7 @@
 #include "drmrga.h"
 #include "NormalRgaContext.h"
 
+#define RGA_VERSION "v1.0-20180420"
 
 int         NormalRgaInitTables();
 
